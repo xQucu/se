@@ -1,0 +1,1 @@
+This activity diagram illustrates the operational workflow of the hotel management system. It maps the path from the initial room reservation request to checking in, payment processing, and final check-out.

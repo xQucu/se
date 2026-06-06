@@ -1,0 +1,1 @@
+This sequence diagram models the step-by-step chronological messages passed between objects in the hotel booking workflow. It visualizes the execution flow of guest verification, room allocation, and booking confirmation.

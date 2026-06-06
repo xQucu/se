@@ -1,0 +1,1 @@
+This diagram presents the interactions between bank customers, technicians, and the automated teller machine (ATM) system. It outlines functional actions such as cash withdrawal, balance inquiries, and cash replenishment.

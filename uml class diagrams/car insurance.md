@@ -1,0 +1,1 @@
+This class diagram models the entity classes, interfaces, and relationships within the car insurance domain. It details how policies, customers, agents, vehicles, and claims link together structurally.

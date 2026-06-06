@@ -1,0 +1,1 @@
+This use case diagram maps out the relationships between clinic staff, patients, and the medical clinic management system. It shows how patients book appointments, doctors access patient histories, and receptionists manage scheduling.

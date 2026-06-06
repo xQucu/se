@@ -1,0 +1,1 @@
+This class diagram illustrates the static class structure and data model of the ATM system. It defines the classes, attributes, methods, and relationships like inheritance and aggregation for cards, transactions, and hardware components.

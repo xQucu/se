@@ -1,0 +1,1 @@
+This document defines the primary use cases and actors involved in the car insurance management system. It illustrates the interactions for actions such as purchasing policies, calculating premiums, and submitting accident claims.

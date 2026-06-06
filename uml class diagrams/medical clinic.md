@@ -1,0 +1,1 @@
+This class diagram models the object-oriented structure of the medical clinic system. It details the properties, behaviors, and associations between doctors, patients, appointments, prescriptions, and medical records.

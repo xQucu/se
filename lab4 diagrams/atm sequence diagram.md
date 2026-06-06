@@ -1,0 +1,1 @@
+This sequence diagram tracks the chronological communication between a customer, the ATM interface, and the bank database. It details the message exchange and validation steps for authenticating a card and completing a transaction.

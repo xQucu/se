@@ -1,0 +1,1 @@
+This class diagram describes the static structure of the hotel management system's code modules. It outlines the definitions and connections for entities such as rooms, guests, employees, reservations, and bills.

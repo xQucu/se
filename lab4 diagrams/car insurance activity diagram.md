@@ -1,0 +1,1 @@
+This activity diagram displays the procedural workflow for processing a new car insurance policy or claim. It highlights the decision points, approval gates, and concurrent tasks required to finalize a user request.

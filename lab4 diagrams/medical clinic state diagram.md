@@ -1,0 +1,1 @@
+This state machine diagram displays the various states an appointment or patient record can transition through in the clinic. It tracks lifecycle changes from creation, scheduling, and active treatment to completion or cancellation.
