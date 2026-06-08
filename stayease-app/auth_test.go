@@ -18,3 +18,18 @@ func TestValidatePassword(t *testing.T) {
 		}
 	}
 }
+
+func TestAuthenticateUser(t *testing.T) {
+	u, ok := AuthenticateUser("owner", "ownerpass123")
+	if !ok || u == nil {
+		t.Errorf("expected authentication to succeed")
+	}
+	if u.Role != Owner {
+		t.Errorf("expected role to be Owner, got %v", u.Role)
+	}
+
+	_, badOk := AuthenticateUser("owner", "wrongpassword")
+	if badOk {
+		t.Errorf("expected authentication to fail for wrong password")
+	}
+}

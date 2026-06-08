@@ -12,3 +12,7 @@ const (
 func ValidatePassword(password string) bool {
 	return len(password) >= 8
 }
+
+func AuthenticateUser(username, password string) (*User, bool) {
+	return nil, false
+}
