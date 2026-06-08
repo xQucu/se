@@ -10,5 +10,5 @@ const (
 )
 
 func ValidatePassword(password string) bool {
-	return false
+	return len(password) >= 8
 }
