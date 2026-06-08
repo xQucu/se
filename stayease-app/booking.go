@@ -1,16 +1,39 @@
 package stayease
 
+var rolePermissions = map[Role]map[string]bool{
+	Owner: {
+		"manage_rooms":        true,
+		"manage_users":        true,
+		"view_rooms":          true,
+		"update_room_status":  true,
+		"calculate_bill":      true,
+		"manage_reservations": true,
+		"checkout_guest":      true,
+	},
+	Manager: {
+		"manage_rooms":        true,
+		"view_rooms":          true,
+		"update_room_status":  true,
+		"calculate_bill":      true,
+		"manage_reservations": true,
+		"checkout_guest":      true,
+	},
+	Receptionist: {
+		"view_rooms":          true,
+		"calculate_bill":      true,
+		"manage_reservations": true,
+		"checkout_guest":      true,
+	},
+	Cleaner: {
+		"view_rooms":         true,
+		"update_room_status": true,
+	},
+}
+
 func HasPermission(role Role, action string) bool {
-	switch role {
-	case Owner:
-		return true // Owner has access to everything
-	case Manager:
-		return action != "manage_users" // Manager has second most permissions
-	case Receptionist:
-		return action == "view_rooms" || action == "calculate_bill" || action == "manage_reservations" || action == "checkout_guest"
-	case Cleaner:
-		return action == "view_rooms" || action == "update_room_status"
-	default:
+	perms, exists := rolePermissions[role]
+	if !exists {
 		return false
 	}
+	return perms[action]
 }
