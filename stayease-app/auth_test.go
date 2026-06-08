@@ -3,10 +3,18 @@ package stayease
 import "testing"
 
 func TestValidatePassword(t *testing.T) {
-	if ValidatePassword("short") {
-		t.Errorf("expected validation to fail for short password")
+	tests := []struct {
+		password string
+		expected bool
+	}{
+		{"short", false},
+		{"1234567", false},
+		{"12345678", true},
+		{"verylongpassword", true},
 	}
-	if !ValidatePassword("longpassword123") {
-		t.Errorf("expected validation to pass for long password")
+	for _, tt := range tests {
+		if result := ValidatePassword(tt.password); result != tt.expected {
+			t.Errorf("ValidatePassword(%q) = %v; expected %v", tt.password, result, tt.expected)
+		}
 	}
 }
