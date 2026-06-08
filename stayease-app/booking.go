@@ -37,3 +37,7 @@ func HasPermission(role Role, action string) bool {
 	}
 	return perms[action]
 }
+
+func CreateRoom(role Role, roomNo string) bool {
+	return false
+}
