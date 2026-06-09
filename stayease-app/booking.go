@@ -61,3 +61,7 @@ func CheckoutRoom(role Role, r *Room) (*Room, error) {
 	r.Status = "Needs Cleaning"
 	return r, nil
 }
+
+func CalculateBill(rate float64, stayDuration int) float64 {
+	return 0
+}
