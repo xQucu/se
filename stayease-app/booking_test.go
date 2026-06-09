@@ -18,10 +18,10 @@ func TestHasPermission(t *testing.T) {
 }
 
 func TestCreateRoom(t *testing.T) {
-	if !CreateRoom(Owner, "104") {
-		t.Errorf("owner should be able to create a room")
+	if err := CreateRoom(Owner, "104"); err != nil {
+		t.Errorf("owner should be able to create a room, got: %v", err)
 	}
-	if CreateRoom(Receptionist, "105") {
+	if err := CreateRoom(Receptionist, "105"); err == nil {
 		t.Errorf("receptionist should not be able to create a room")
 	}
 }

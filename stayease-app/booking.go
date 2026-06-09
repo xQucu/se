@@ -1,5 +1,7 @@
 package stayease
 
+import "errors"
+
 var rolePermissions = map[Role]map[string]bool{
 	Owner: {
 		"manage_rooms":        true,
@@ -38,9 +40,9 @@ func HasPermission(role Role, action string) bool {
 	return perms[action]
 }
 
-func CreateRoom(role Role, roomNo string) bool {
+func CreateRoom(role Role, roomNo string) error {
 	if !HasPermission(role, "manage_rooms") {
-		return false
+		return errors.New("unauthorized to manage rooms")
 	}
-	return true
+	return nil
 }
