@@ -39,5 +39,8 @@ func HasPermission(role Role, action string) bool {
 }
 
 func CreateRoom(role Role, roomNo string) bool {
-	return false
+	if !HasPermission(role, "manage_rooms") {
+		return false
+	}
+	return true
 }
