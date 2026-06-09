@@ -63,5 +63,5 @@ func CheckoutRoom(role Role, r *Room) (*Room, error) {
 }
 
 func CalculateBill(rate float64, stayDuration int) float64 {
-	return 0
+	return rate * float64(stayDuration)
 }
