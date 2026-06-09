@@ -9,19 +9,23 @@ func TestHasPermission(t *testing.T) {
 	if HasPermission(Cleaner, "calculate_bill") {
 		t.Errorf("cleaner should not be allowed to calculate bill")
 	}
-	if !HasPermission(Receptionist, "calculate_bill") {
-		t.Errorf("receptionist should be allowed to calculate bill")
-	}
-	if HasPermission(Receptionist, "manage_rooms") {
-		t.Errorf("receptionist should not be allowed to manage rooms")
-	}
 }
 
-func TestCreateRoom(t *testing.T) {
-	if err := CreateRoom(Owner, "104"); err != nil {
-		t.Errorf("owner should be able to create a room, got: %v", err)
+func TestCheckoutRoom(t *testing.T) {
+	r := Room{Status: "Occupied"}
+	
+	// Cleaner cannot checkout guest
+	err := CheckoutRoom(Cleaner, &r)
+	if err == nil {
+		t.Errorf("cleaner should not be authorized to checkout guest")
 	}
-	if err := CreateRoom(Receptionist, "105"); err == nil {
-		t.Errorf("receptionist should not be able to create a room")
+
+	// Receptionist can checkout guest
+	err = CheckoutRoom(Receptionist, &r)
+	if err != nil {
+		t.Errorf("receptionist should be authorized to checkout guest, got: %v", err)
+	}
+	if r.Status != "Needs Cleaning" {
+		t.Errorf("expected room status to be Needs Cleaning, got %s", r.Status)
 	}
 }

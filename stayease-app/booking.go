@@ -46,3 +46,14 @@ func CreateRoom(role Role, roomNo string) error {
 	}
 	return nil
 }
+
+type Room struct {
+	ID     string
+	Number string
+	Status string
+	Rate   float64
+}
+
+func CheckoutRoom(role Role, r *Room) error {
+	return nil
+}
