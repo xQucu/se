@@ -55,5 +55,9 @@ type Room struct {
 }
 
 func CheckoutRoom(role Role, r *Room) error {
+	if !HasPermission(role, "checkout_guest") {
+		return errors.New("unauthorized to checkout guest")
+	}
+	r.Status = "Needs Cleaning"
 	return nil
 }
