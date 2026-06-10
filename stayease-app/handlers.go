@@ -4,6 +4,19 @@ import (
 	"net/http"
 )
 
+func setSessionCookies(w http.ResponseWriter, username string, role Role) {
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session_user",
+		Value: username,
+		Path:  "/",
+	})
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session_role",
+		Value: string(role),
+		Path:  "/",
+	})
+}
+
 func NewServer() *http.ServeMux {
 	mux := http.NewServeMux()
 	
@@ -37,17 +50,7 @@ func NewServer() *http.ServeMux {
 			return
 		}
 
-		// Success session cookie mock
-		http.SetCookie(w, &http.Cookie{
-			Name:  "session_user",
-			Value: string(user.Username),
-			Path:  "/",
-		})
-		http.SetCookie(w, &http.Cookie{
-			Name:  "session_role",
-			Value: string(user.Role),
-			Path:  "/",
-		})
+		setSessionCookies(w, user.Username, user.Role)
 		w.Header().Set("HX-Redirect", "/dashboard")
 		w.Write([]byte("Login successful"))
 	})
