@@ -26,6 +26,16 @@ func getSessionRole(r *http.Request) (Role, bool) {
 	return Role(cookie.Value), true
 }
 
+func writeRoomsSection(w http.ResponseWriter, role Role) {
+	fmt.Fprintf(w, "<div>Room Inventory</div>")
+}
+
+func writeBillingSection(w http.ResponseWriter, role Role) {
+	if HasPermission(role, "calculate_bill") {
+		fmt.Fprintf(w, "<div>Billing Processor</div>")
+	}
+}
+
 func NewServer() *http.ServeMux {
 	mux := http.NewServeMux()
 	
@@ -55,10 +65,8 @@ func NewServer() *http.ServeMux {
 
 		w.Header().Set("Content-Type", "text/html")
 		fmt.Fprintf(w, "<h1>Dashboard</h1>")
-		fmt.Fprintf(w, "<div>Room Inventory</div>")
-		if HasPermission(role, "calculate_bill") {
-			fmt.Fprintf(w, "<div>Billing Processor</div>")
-		}
+		writeRoomsSection(w, role)
+		writeBillingSection(w, role)
 	})
 	return mux
 }
