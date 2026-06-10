@@ -37,6 +37,24 @@ func writeBillingSection(w http.ResponseWriter, role Role) {
 	}
 }
 
+func parseQueryParamFloat(r *http.Request, key string) float64 {
+	val := r.FormValue(key)
+	if val == "" {
+		val = r.URL.Query().Get(key)
+	}
+	f, _ := strconv.ParseFloat(val, 64)
+	return f
+}
+
+func parseQueryParamInt(r *http.Request, key string) int {
+	val := r.FormValue(key)
+	if val == "" {
+		val = r.URL.Query().Get(key)
+	}
+	i, _ := strconv.Atoi(val)
+	return i
+}
+
 func NewServer() *http.ServeMux {
 	mux := http.NewServeMux()
 	
@@ -78,10 +96,9 @@ func NewServer() *http.ServeMux {
 			return
 		}
 
-		rateStr := r.URL.Query().Get("rate")
-		daysStr := r.URL.Query().Get("days")
-		rate, _ := strconv.ParseFloat(rateStr, 64)
-		days, _ := strconv.Atoi(daysStr)
+		_ = r.ParseForm()
+		rate := parseQueryParamFloat(r, "rate")
+		days := parseQueryParamInt(r, "days")
 		
 		bill := CalculateBill(rate, days)
 		w.Write([]byte(fmt.Sprintf("Total: $%0.2f", bill)))
