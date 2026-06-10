@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase - Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-indigo-600 text-white shadow-md py-4 px-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold tracking-tight">StayEase Local Server</h1>
+        <div class="flex items-center space-x-4">
+            <span class="text-sm font-semibold bg-indigo-700 px-3 py-1 rounded">Role: {{.Role}}</span>
+            <a href="/logout" class="text-sm underline">Log out</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-8 px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Room Inventory Section (Visible to all) -->
+        <section class="bg-white p-6 rounded-lg shadow-md col-span-1 md:col-span-2">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 flex justify-between">
+                <span>Room Inventory</span>
+                <button hx-get="/rooms" hx-target="#room-list" class="text-sm bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded shadow">
+                    Query Room List
+                </button>
+            </h2>
+            <div id="room-list" class="space-y-3">
+                <p class="text-gray-500 text-sm">Click query to load rooms.</p>
+            </div>
+        </section>
+
+        <!-- Billing Processor Section (Only visible to Owner, Manager, Receptionist) -->
+        {{if .CanCalculateBill}}
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Billing Processor</h2>
+            <form hx-post="/checkout" hx-target="#billing-result" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600">Room Rate ($/night)</label>
+                    <input type="number" step="0.01" name="rate" value="150.00" class="mt-1 block w-full rounded border-gray-300 p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600">Stay Duration (nights)</label>
+                    <input type="number" name="days" value="3" class="mt-1 block w-full rounded border-gray-300 p-2 border">
+                </div>
+                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow">
+                    Calculate Bill Total
+                </button>
+            </form>
+            <div id="billing-result" class="mt-4 p-4 bg-gray-50 rounded text-center"></div>
+        </section>
+        {{else}}
+        <section class="bg-gray-50 p-6 rounded-lg border border-dashed flex items-center justify-center text-gray-400">
+            Billing features disabled for Cleaner role.
+        </section>
+        {{end}}
+
+        <!-- Room Status Management (Cleaners can update) -->
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Update Room Status</h2>
+            <form hx-post="/status-update" hx-target="#status-result" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600">Room ID</label>
+                    <input type="text" name="room_id" value="2" class="mt-1 block w-full rounded border-gray-300 p-2 border">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600">New Status</label>
+                    <select name="status" class="mt-1 block w-full rounded border-gray-300 p-2 border">
+                        <option value="Available">Available</option>
+                        <option value="Needs Cleaning">Needs Cleaning</option>
+                        <option value="Occupied">Occupied</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
+                    Update Status
+                </button>
+            </form>
+            <div id="status-result" class="mt-4 p-4 bg-gray-50 rounded text-center"></div>
+        </section>
+    </main>
+</body>
+</html>

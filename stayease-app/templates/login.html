@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayEase - Login</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
+        <h1 class="text-2xl font-bold text-indigo-600 mb-2 text-center">StayEase</h1>
+        <p class="text-gray-500 text-sm text-center mb-6">Hotel Management System Portal</p>
+        <form hx-post="/login" hx-target="#login-err" class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-600">Username</label>
+                <input type="text" name="username" placeholder="e.g. owner" required class="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-600">Password</label>
+                <input type="password" name="password" placeholder="Min. 8 characters" required class="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border">
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-750 text-white font-bold py-2 rounded shadow">
+                Log In
+            </button>
+            <div id="login-err" class="text-center font-semibold mt-2"></div>
+        </form>
+        <div class="mt-6 border-t pt-4 text-xs text-gray-400 text-center space-y-1">
+            <p>Demo Accounts:</p>
+            <p>owner / ownerpass123 (Owner)</p>
+            <p>cleaner / cleanerpass123 (Cleaner)</p>
+        </div>
+    </div>
+</body>
+</html>
