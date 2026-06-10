@@ -1,6 +1,7 @@
 package stayease
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -17,42 +18,47 @@ func setSessionCookies(w http.ResponseWriter, username string, role Role) {
 	})
 }
 
+func getSessionRole(r *http.Request) (Role, bool) {
+	cookie, err := r.Cookie("session_role")
+	if err != nil {
+		return "", false
+	}
+	return Role(cookie.Value), true
+}
+
 func NewServer() *http.ServeMux {
 	mux := http.NewServeMux()
 	
 	mux.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
-		w.Write([]byte(`
-			<form hx-post="/login" hx-target="#login-err" class="space-y-4">
-				<input type="text" name="username" placeholder="Username" required>
-				<input type="password" name="password" placeholder="Password" required>
-				<button type="submit">Login</button>
-				<div id="login-err"></div>
-			</form>
-		`))
+		w.Write([]byte(`<form hx-post="/login">Login Form</form>`))
 	})
 
 	mux.HandleFunc("POST /login", func(w http.ResponseWriter, r *http.Request) {
 		_ = r.ParseForm()
-		username := r.FormValue("username")
-		password := r.FormValue("password")
-
-		if !ValidatePassword(password) {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Password must contain at least 8 characters"))
-			return
-		}
-
-		user, ok := AuthenticateUser(username, password)
+		user, ok := AuthenticateUser(r.FormValue("username"), r.FormValue("password"))
 		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Invalid username or password"))
+			w.Write([]byte("Invalid login"))
+			return
+		}
+		setSessionCookies(w, user.Username, user.Role)
+		w.Header().Set("HX-Redirect", "/dashboard")
+	})
+
+	mux.HandleFunc("GET /dashboard", func(w http.ResponseWriter, r *http.Request) {
+		role, ok := getSessionRole(r)
+		if !ok {
+			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
 
-		setSessionCookies(w, user.Username, user.Role)
-		w.Header().Set("HX-Redirect", "/dashboard")
-		w.Write([]byte("Login successful"))
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprintf(w, "<h1>Dashboard</h1>")
+		fmt.Fprintf(w, "<div>Room Inventory</div>")
+		if HasPermission(role, "calculate_bill") {
+			fmt.Fprintf(w, "<div>Billing Processor</div>")
+		}
 	})
 	return mux
 }
