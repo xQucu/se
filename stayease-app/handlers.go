@@ -3,6 +3,7 @@ package stayease
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func setSessionCookies(w http.ResponseWriter, username string, role Role) {
@@ -67,6 +68,23 @@ func NewServer() *http.ServeMux {
 		fmt.Fprintf(w, "<h1>Dashboard</h1>")
 		writeRoomsSection(w, role)
 		writeBillingSection(w, role)
+	})
+
+	mux.HandleFunc("POST /checkout", func(w http.ResponseWriter, r *http.Request) {
+		role, ok := getSessionRole(r)
+		if !ok || !HasPermission(role, "calculate_bill") {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("Forbidden"))
+			return
+		}
+
+		rateStr := r.URL.Query().Get("rate")
+		daysStr := r.URL.Query().Get("days")
+		rate, _ := strconv.ParseFloat(rateStr, 64)
+		days, _ := strconv.Atoi(daysStr)
+		
+		bill := CalculateBill(rate, days)
+		w.Write([]byte(fmt.Sprintf("Total: $%0.2f", bill)))
 	})
 	return mux
 }
