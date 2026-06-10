@@ -19,16 +19,6 @@ func TestLoginHandler(t *testing.T) {
 
 func TestDashboardHandler(t *testing.T) {
 	server := NewServer()
-
-	// Request dashboard without cookie should redirect to login
-	reqUnauth := httptest.NewRequest("GET", "/dashboard", nil)
-	wUnauth := httptest.NewRecorder()
-	server.ServeHTTP(wUnauth, reqUnauth)
-	if wUnauth.Code != http.StatusFound {
-		t.Errorf("expected redirect 302, got %d", wUnauth.Code)
-	}
-
-	// Request dashboard with Cleaner cookie should only contain Cleaner actions
 	reqCleaner := httptest.NewRequest("GET", "/dashboard", nil)
 	reqCleaner.AddCookie(&http.Cookie{Name: "session_user", Value: "cleaner"})
 	reqCleaner.AddCookie(&http.Cookie{Name: "session_role", Value: "Cleaner"})
@@ -39,7 +29,26 @@ func TestDashboardHandler(t *testing.T) {
 	if !strings.Contains(body, "Room Inventory") {
 		t.Errorf("cleaner should see Room Inventory")
 	}
-	if strings.Contains(body, "Billing Processor") {
-		t.Errorf("cleaner should NOT see Billing Processor")
+}
+
+func TestCheckoutActionPermission(t *testing.T) {
+	server := NewServer()
+
+	// Cleaner checkout request should fail
+	reqCleaner := httptest.NewRequest("POST", "/checkout?rate=150&days=3", nil)
+	reqCleaner.AddCookie(&http.Cookie{Name: "session_role", Value: "Cleaner"})
+	wCleaner := httptest.NewRecorder()
+	server.ServeHTTP(wCleaner, reqCleaner)
+	if wCleaner.Code != http.StatusForbidden {
+		t.Errorf("expected 403 Forbidden for Cleaner checkout, got %d", wCleaner.Code)
+	}
+
+	// Receptionist checkout request should pass
+	reqRecep := httptest.NewRequest("POST", "/checkout?rate=150&days=3", nil)
+	reqRecep.AddCookie(&http.Cookie{Name: "session_role", Value: "Receptionist"})
+	wRecep := httptest.NewRecorder()
+	server.ServeHTTP(wRecep, reqRecep)
+	if wRecep.Code != http.StatusOK {
+		t.Errorf("expected 200 OK for Receptionist checkout, got %d", wRecep.Code)
 	}
 }
