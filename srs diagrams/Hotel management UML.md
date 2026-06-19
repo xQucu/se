@@ -1,0 +1,1 @@
+This use case model shows the functional interactions within the hotel management system. It details the processes for room booking, check-in and check-out management, and billing services by hotel guests and staff.
